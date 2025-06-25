@@ -1,231 +1,258 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Sports Ball Transformer</title>
-<style>
-  body {
-    margin: 0;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #1e5799, #7db9e8);
-    transition: background 0.5s ease;
-    font-family: Arial, sans-serif;
-    overflow: hidden;
-  }
-  .ball-container {
-    width: 300px;
-    height: 300px;
-    cursor: pointer;
-    perspective: 1000px;
-    position: relative;
-  }
-  #ball {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    box-shadow:
-      inset -20px -20px 40px rgba(0,0,0,0.4),
-      inset 5px 5px 10px rgba(255,255,255,0.2),
-      0 15px 40px rgba(0,0,0,0.4);
-    overflow: hidden;
-    position: relative;
-    background: white;
-    transition: transform 0.8s;
-    transform-style: preserve-3d;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  #ball img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-    user-select: none;
-    pointer-events: none;
-    transform: scale(0.9);
-  }
-  .counter {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: rgba(255,255,255,0.8);
-    padding: 10px 15px;
-    border-radius: 20px;
-    font-weight: bold;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-  }
-  .sport-name {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(255,255,255,0.8);
-    padding: 10px 20px;
-    border-radius: 20px;
-    font-weight: bold;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    text-transform: uppercase;
-    font-size: 18px;
-    user-select: none;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sports Ball Transformer</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #1e5799, #7db9e8);
+      transition: background 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden;
+    }
+
+    .instruction {
+      position: absolute;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-weight: 600;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      font-size: 15px;
+      letter-spacing: 0.5px;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .ball-container {
+      width: 300px;
+      height: 300px;
+      cursor: pointer;
+      perspective: 1000px;
+      position: relative;
+      filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.3));
+      transition: transform 0.3s ease;
+    }
+
+    .ball-container:hover {
+      transform: translateY(-5px) scale(1.02);
+    }
+
+    #ball {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      box-shadow:
+        inset -25px -25px 50px rgba(0, 0, 0, 0.5),
+        inset 10px 10px 20px rgba(255, 255, 255, 0.3),
+        0 25px 50px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+      position: relative;
+      background: radial-gradient(circle at 30% 30%, white, #f0f0f0);
+      transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+      transform-style: preserve-3d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    #ball.loading {
+      background: conic-gradient(rgba(255, 255, 255, 0.8),
+          rgba(255, 255, 255, 0.2),
+          rgba(255, 255, 255, 0.8));
+      animation: rotate 4.5s linear infinite;
+    }
+
+    @keyframes rotate {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    #ball img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      user-select: none;
+      pointer-events: none;
+      transition: transform 0.5s ease;
+      position: relative;
+      z-index: 2;
+    }
+
+    .sport-name {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 15px 30px;
+      border-radius: 30px;
+      font-weight: bold;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      text-transform: uppercase;
+      font-size: 16px;
+      user-select: none;
+      letter-spacing: 2px;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateX(-50%) translateY(0px);
+      }
+
+      50% {
+        transform: translateX(-50%) translateY(-10px);
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <div class="counter">Click the ball to transform</div>
+  <div class="instruction">Click the ball to transform</div>
   <div class="ball-container">
-    <div id="ball">
+    <div id="ball" class="loading">
       <img id="ballImage" src="" alt="Ball" />
     </div>
   </div>
-  <div class="sport-name" id="sportName">Football</div>
+  <div class="sport-name" id="sportName">Loading...</div>
 
-<script>
-  const ballTypes = [
-    { 
-      name: "Football", 
-      background: "linear-gradient(135deg, #1e5799, #7db9e8)", 
-      image: "https://upload.wikimedia.org/wikipedia/commons/e/ec/Soccer_ball.svg" 
-    },
-    { 
-      name: "Basketball", 
-      background: "linear-gradient(135deg, #ff512f, #dd2476)", 
-      image: "https://upload.wikimedia.org/wikipedia/commons/7/7a/Basketball.png" 
-    },
-    { 
-      name: "Cricket Ball", 
-      background: "linear-gradient(135deg, #4CAF50, #8BC34A)", 
-      image: "https://cdn.bdstall.com/product-image/giant_130456.jpg" 
-    },
-    { 
-      name: "Tennis Ball", 
-      background: "linear-gradient(135deg, #a8e063, #56ab2f)", 
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVYDiqfAuInlvMjRH8BIrsKN7gCGMcSa6AYQ&s" 
-    },
-    { 
-      name: "Baseball", 
-      background: "linear-gradient(135deg, #f46b45, #eea849)", 
-      image: "https://static.vecteezy.com/system/resources/thumbnails/000/363/513/small_2x/realistic-baseball-vector.png" 
-    },
-    { 
-      name: "Volleyball", 
-      background: "linear-gradient(135deg, #00c6ff, #0072ff)", 
-      image: "https://i5.walmartimages.com/asr/b15633d2-c285-4914-84b8-237cdfd50abc.4d591ea5d82bf7b436446677730fe03a.jpeg" 
-    },
-    { 
-      name: "Golf Ball", 
-      background: "linear-gradient(135deg, #1a2a6c, #fdbb2d)", 
-      image: "https://cdn.shopify.com/s/files/1/0835/8445/0850/files/vice-golf-PDP-Tour-White-Ball.jpg?v=1716672682" 
-    },
-    { 
-      name: "Rugby Ball", 
-      background: "linear-gradient(135deg, #000000, #434343)", 
-      image: "https://www.worldrugbyshop.com/cdn/shop/products/29510S2011-Gilbert-TR4000-St.Patrick_s-Rugby-Ball-Tilt.png?v=1671733498&width=1214" 
-    },
-    { 
-      name: "Ping Pong Ball", 
-      background: "linear-gradient(135deg, #ff416c, #ff4b2b)", 
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxUxfF_e3U4ZsUrAp-jlwP5qDne3JKxCZIiw&s" 
-    },
-    { 
-      name: "Bowling Ball", 
-      background: "linear-gradient(135deg, #3a7bd5, #00d2ff)", 
-      image: "https://gophersport.com/media/catalog/product/g/_/g_45949_xforce-001.jpg?optimize=low&bg-color=255,255,255&fit=bounds&height=744&width=744&canvas=744:744" 
-    },
-    { 
-      name: "Beach Ball", 
-      background: "linear-gradient(135deg, #f857a6, #ff5858)", 
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoDJydofj_x3RoT8z5ZeepNe2H9EwDPBu9Lg&s" 
-    },
-    { 
-      name: "Billiard Ball (8-Ball)", 
-      background: "linear-gradient(135deg, #0f2027, #2c5364)", 
-      image: "https://media.istockphoto.com/id/614744860/vector/billiard-black-eight.jpg?s=612x612&w=0&k=20&c=bbAtGFCr1FOP4HWiU_sH-KjVEhTmy-EkkyRR3FSpjdQ=" 
-    },
-    { 
-      name: "Hockey Puck", 
-      background: "linear-gradient(135deg, #bdc3c7, #2c3e50)", 
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStbJJ0i_RKqgHORJqjZKaFkpGRd98KpmY3yw&s" 
-    },
-    { 
-      name: "Softball", 
-      background: "linear-gradient(135deg, #c31432, #240b36)", 
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8X6fFKRDSdDLlvfo2-ugpcTg4a39FYcvNBQ&s" 
-    },
-    { 
-      name: "Medicine Ball", 
-      background: "linear-gradient(135deg, #8e9eab, #eef2f3)", 
-      image: "https://americanbarbell.com/cdn/shop/products/IMG_0037_45275d1d-cf9c-4f1a-be0f-e0b5b6e77b16.JPG?v=1531499367&width=1500" 
-    },
-    { 
-      name: "Wiffle Ball", 
-      background: "linear-gradient(135deg, #f5af19, #f12711)", 
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7ie9ZXonk5Wi0kuRXQIly7R_kYQ0f--6PVQ&s" 
-    },
-    { 
-      name: "Lacrosse Ball", 
-      background: "linear-gradient(135deg, #2193b0, #6dd5ed)", 
-      image: "https://gladiatorlacrosse.com/wp-content/uploads/2020/04/GL-LAXBalls-Singles-Yellow.jpg" 
-    },
-    { 
-      name: "Bocce Ball", 
-      background: "linear-gradient(135deg, #e53935, #e35d5b)", 
-      image: "https://yardgames.com/cdn/shop/files/bocce3.jpg?v=1698420757&width=1946" 
+  <script>
+    const ballTypes = [
+      {
+        name: "Football",
+        background: "linear-gradient(135deg, #1e5799, #7db9e8)",
+        image: "https://upload.wikimedia.org/wikipedia/commons/e/ec/Soccer_ball.svg"
+      },
+      {
+        name: "Basketball",
+        background: "linear-gradient(135deg, #ff512f, #dd2476)",
+        image: "https://upload.wikimedia.org/wikipedia/commons/7/7a/Basketball.png"
+      },
+      {
+        name: "Cricket Ball",
+        background: "linear-gradient(135deg, #4CAF50, #8BC34A)",
+        image: "https://cdn.bdstall.com/product-image/giant_130456.jpg"
+      },
+      {
+        name: "Tennis Ball",
+        background: "linear-gradient(135deg, #a8e063, #56ab2f)",
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVYDiqfAuInlvMjRH8BIrsKN7gCGMcSa6AYQ&s"
+      },
+      {
+        name: "Baseball",
+        background: "linear-gradient(135deg, #f46b45, #eea849)",
+        image: "https://static.vecteezy.com/system/resources/thumbnails/000/363/513/small_2x/realistic-baseball-vector.png"
+      },
+      {
+        name: "Volleyball",
+        background: "linear-gradient(135deg, #00c6ff, #0072ff)",
+        image: "https://i5.walmartimages.com/asr/b15633d2-c285-4914-84b8-237cdfd50abc.4d591ea5d82bf7b436446677730fe03a.jpeg"
+      },
+      {
+        name: "Golf Ball",
+        background: "linear-gradient(135deg, #1a2a6c, #fdbb2d)",
+        image: "https://cdn.shopify.com/s/files/1/0835/8445/0850/files/vice-golf-PDP-Tour-White-Ball.jpg?v=1716672682"
+      },
+      {
+        name: "Rugby Ball",
+        background: "linear-gradient(135deg, #000000, #434343)",
+        image: "https://www.worldrugbyshop.com/cdn/shop/products/29510S2011-Gilbert-TR4000-St.Patrick_s-Rugby-Ball-Tilt.png?v=1671733498&width=1214"
+      },
+      {
+        name: "Ping Pong Ball",
+        background: "linear-gradient(135deg, #ff416c, #ff4b2b)",
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxUxfF_e3U4ZsUrAp-jlwP5qDne3JKxCZIiw&s"
+      },
+      {
+        name: "Bowling Ball",
+        background: "linear-gradient(135deg, #3a7bd5, #00d2ff)",
+        image: "https://gophersport.com/media/catalog/product/g/_/g_45949_xforce-001.jpg?optimize=low&bg-color=255,255,255&fit=bounds&height=744&width=744&canvas=744:744"
+      }
+    ];
+
+    let currentBallIndex = 0;
+    const ball = document.getElementById('ball');
+    const ballImage = document.getElementById('ballImage');
+    const sportName = document.getElementById('sportName');
+    const body = document.body;
+    let imagesLoaded = 0;
+
+    function preloadImages() {
+      ballTypes.forEach((ball, index) => {
+        const img = new Image();
+        img.onload = () => {
+          imagesLoaded++;
+          if (imagesLoaded === ballTypes.length) {
+            updateBall();
+            ball.classList.remove('loading');
+          }
+        };
+        img.onerror = () => {
+          imagesLoaded++;
+          if (imagesLoaded === ballTypes.length) {
+            updateBall();
+            ball.classList.remove('loading');
+          }
+        };
+        img.src = ball.image;
+      });
     }
-  ];
 
-  let currentBallIndex = 0;
-  const ball = document.getElementById('ball');
-  const ballImage = document.getElementById('ballImage');
-  const sportName = document.getElementById('sportName');
-  const body = document.body;
+    function updateBall() {
+      const currentBall = ballTypes[currentBallIndex];
+      body.style.background = currentBall.background;
 
-  // Preload all images
-  function preloadImages() {
-    ballTypes.forEach(ball => {
-      const img = new Image();
-      img.src = ball.image;
-    });
-  }
-
-  function updateBall() {
-    const currentBall = ballTypes[currentBallIndex];
-    body.style.background = currentBall.background;
-    
-    // Create a new image element to handle loading
-    const newImg = new Image();
-    newImg.onload = function() {
-      ballImage.src = this.src;
+      ballImage.src = currentBall.image;
       ballImage.alt = currentBall.name;
       sportName.textContent = currentBall.name;
-      
+
       // Adjust scaling for non-round balls
       if (['Rugby Ball', 'Hockey Puck'].includes(currentBall.name)) {
-        ballImage.style.transform = 'scale(0.8)';
+        ballImage.style.transform = 'scale(1)';
       } else {
         ballImage.style.transform = 'scale(0.9)';
       }
-    };
-    newImg.src = currentBall.image;
 
-    ball.style.transform = "rotateY(360deg)";
-    setTimeout(() => {
-      ball.style.transform = "rotateY(0deg)";
-    }, 800);
-  }
+      ball.style.transform = "rotateY(360deg)";
+      setTimeout(() => {
+        ball.style.transform = "rotateY(0deg)";
+      }, 1500);
+    }
 
-  ball.addEventListener('click', () => {
-    currentBallIndex = (currentBallIndex + 1) % ballTypes.length;
-    updateBall();
-  });
+    ball.addEventListener('click', () => {
+      currentBallIndex = (currentBallIndex + 1) % ballTypes.length;
+      updateBall();
+    });
 
-  // Initialize
-  preloadImages();
-  updateBall();
-</script>
+    // Initialize
+    preloadImages();
+  </script>
 </body>
+
 </html>
